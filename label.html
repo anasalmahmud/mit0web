@@ -1,29 +1,50 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Webs Sockets</title>
 
         <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
-        <script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.js"></script>
-        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.css">
-        <link rel="stylesheet" type="text/css" href="https://datatables.net/media/css/site-examples.css">
+        <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+        <script src="https://cdn.datatables.net/1.12.1/js/dataTables.bulma.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.3/css/bulma.min.css">
+        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.1/css/dataTables.bulma.min.css">
+        <!-- custom css -->
+      <style>
+        div.columns {
+          margin-top: 50px;
+        }
+
+        h1 {
+          color: green !important;
+          margin-bottom: 20px;
+
+        }
+
+        .table td {
+          font-size: 17px
+        }
+
+        .table th {
+          font-size: 17px
+        }
+      </style>
 
     </head>
+
     <body>
-
-        <table id="example" class="display dataTable cell-border" style="width:100%"></table>
-
-        <br><br>
-
-        <div id="tickControls">
-            <input id="message" placeholder="Enter data as JSON string">
-            <button id="send">Send</button>
+    <div class='container has-text-centered'>
+    <div class='columns is-mobile is-centered'>
+      <div class='column is-8'>
+        <div>
+          <h1 class='title'>Order Label Printing</h1>
+          <hr>
         </div>
-
-        <div id="tick"></div>
+        <table id="example" class="table is-striped is-bordered" style="width:100%"></table>
         <script src="websocketDemo.js"></script>
-
+      </div>
+    </div>
+    </div>
     </body>
 </html>
