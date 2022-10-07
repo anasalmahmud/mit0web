@@ -1,17 +1,61 @@
+/* Formatting function for row details - modify as you need */
+function format(d) {
+    // `d` is the original data object for the row
+    return (
+        '<table style="padding-left:50px;">' +
+        '<tr>' +
+        '<td>FDL Label:</td>' +
+        '<td>' +
+        d.fdl_label +
+        '</td>' +
+        '</tr>' +
+        '<tr>' +
+        '<td>Extra info:</td>' +
+        '<td>And any further details here (images etc)...</td>' +
+        '</tr>' +
+        '</table>'
+    );
+}
+
 $(document).ready(function () {
 
     var table;
 
     // a dummy initial row for testing:
-    var dataSet = [ {"order_id": "AAPL", "third_party_shipment_id": 134.28} ];
+    var dataSet = [ {"order_id": "AAPL", "third_party_shipment_id": 134.28, "fdl_label" : "hello", "third_party_code" : "DPD", "is_printed" : "True"} ];
     $(document).ready(function () {
         table = $('#example').DataTable({
             data: dataSet,
             columns: [
+                {
+                className: 'dt-control',
+                orderable: false,
+                data: null,
+                defaultContent: '',
+            },
                 {title: "Order ID", data: "order_id"},
-                {title: "Price", data: "third_party_shipment_id"}
+                {title: "TP Tracking ID", data: "third_party_shipment_id"},
+                {title: "TP LABEL", data: "third_party_code"},
+                {title: "Print Info", data: "is_printed"},
             ]
         });
+    });
+
+       // Add event listener for opening and closing details
+
+    $('#example').on('click', 'td.dt-control', function () {
+        var tr = $(this).closest('tr');
+        var row = table.row(tr);
+
+        if (row.child.isShown()) {
+            // This row is already open - close it
+            row.child.hide();
+            tr.removeClass('shown');
+        } else {
+            // Open this row
+            row.child(format(row.data())).show();
+            tr.addClass('shown');
+        }
     });
 
     // small helper function for selecting element by id
@@ -21,16 +65,6 @@ $(document).ready(function () {
     let ws = new WebSocket("wss://test.fdll.uk/ws/third-party-order/");
     ws.onmessage = msg => updateTable(msg);
     ws.onclose = () => alert("WebSocket connection closed");
-
-    // Add event listeners to button - this is just used to provide test input data
-    id("send").addEventListener("click", () => sendAndClear(id("message").value));
-
-    function sendAndClear(message) {
-        if (message !== "") {
-            ws.send(message);
-            id("message").value = "";
-        }
-    }
 
     function updateTable(message) {
         let stockData = JSON.parse(message.data);
