@@ -1,32 +1,36 @@
+function SendData(send_data) {
+
+    const socket = new WebSocket('ws://localhost:8000');
+
+    socket.addEventListener('open', function (event) {
+
+    socket.send(send_data);
+
+});
+}
+
 /* Formatting function for row details - modify as you need */
 function format(d) {
+    let html = "";
+    html += '<table style="padding-left:50px;">';
+    html += "<tr>";
+    html += "<td> <a class='button is-primary is-small' href='" + d.fdl_label +"'>View FDL</a> </td>";
+    html += "<td> <a class='button is-black is-small' href='" + d.fdl_label +"'>Reprint " + d.third_party_code +"</a> </td>";
+
+    html += "</tr>"
+    html += "</table>"
+
     // `d` is the original data object for the row
-    return (
-        '<table style="padding-left:50px;">' +
-        '<tr>' +
-        '<td>FDL Label:</td>' +
-        '<td>' +
-        d.fdl_label +
-        '</td>' +
-        '</tr>' +
-        '<tr>' +
-        '<td>Extra info:</td>' +
-        '<td>And any further details here (images etc)...</td>' +
-        '</tr>' +
-        '</table>'
-    );
+    return html
 }
 
 $(document).ready(function () {
 
     var table;
 
-    // a dummy initial row for testing:
-    var dataSet = [ {"order_id": "AAPL", "third_party_shipment_id": 134.28, "fdl_label" : "hello", "third_party_code" : "DPD", "is_printed" : "True"} ];
     $(document).ready(function () {
         table = $('#example').DataTable({
-            data: dataSet,
-            columns: [
+            'columns': [
                 {
                 className: 'dt-control',
                 orderable: false,
@@ -58,8 +62,6 @@ $(document).ready(function () {
         }
     });
 
-    // small helper function for selecting element by id
-    let id = id => document.getElementById(id);
 
     //Establish the WebSocket connection and set up event handlers
     let ws = new WebSocket("wss://test.fdll.uk/ws/third-party-order/");
@@ -78,6 +80,7 @@ $(document).ready(function () {
             // insert a new row:
             table.row.add( stockData ).draw();
         }
+        return SendData(message.data)
 
     }
 
